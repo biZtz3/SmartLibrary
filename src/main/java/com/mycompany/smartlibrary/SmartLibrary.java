@@ -4,9 +4,8 @@ import java.util.Scanner;
 
 public class SmartLibrary {
     
-    
     public static void cariKoleksi(String judul, Koleksi[] daftarKoleksi, int jumlahKoleksi) {
-        System.out.println("Mencari buku dengan Judul: " + judul);
+        System.out.println("Mencari Koleksi dengan Judul: " + judul);
         boolean ditemukan = false;
         for (int i = 0; i < jumlahKoleksi; i++) {
             if (daftarKoleksi[i].getJudul().equalsIgnoreCase(judul)) { 
@@ -19,7 +18,7 @@ public class SmartLibrary {
     }
 
     public static void cariKoleksi(int tahunTerbit, Koleksi[] daftarKoleksi, int jumlahKoleksi) {
-        System.out.println("Mencari buku dengan Tahun Terbit: " + tahunTerbit);
+        System.out.println("Mencari Koleksi dengan Tahun Terbit: " + tahunTerbit);
         boolean ditemukan = false;
         for (int i = 0; i < jumlahKoleksi; i++) {
             if (daftarKoleksi[i].getTahunTerbit() == tahunTerbit) { 
@@ -31,10 +30,6 @@ public class SmartLibrary {
         if (!ditemukan) System.out.println("Koleksi tidak ditemukan.");
     }
 
-    public static void simulasiPinjam(Koleksi item) {
-        item.caraPinjam();
-    }
-    
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             Koleksi[] daftarKoleksi = new Koleksi[10];
@@ -61,18 +56,17 @@ public class SmartLibrary {
                     case 1 -> {
                         if (jumlahKoleksi < daftarKoleksi.length) {
                             System.out.println("\n-- Pilih Jenis Koleksi --");
-                            System.out.println("1. Buku Cetak Fisik");
+                            System.out.println("1. Koleksi Cetak Fisik");
                             System.out.println("2. E-Book Digital");
-                            System.out.println("3. Majalah");
-                            System.out.println("Pilihan (1/2/3): ";
+                            System.out.print("Pilihan (1/2): ");
+                            
                             int jenis = scanner.nextInt();
-                            scannere.nextLine();
+                            scanner.nextLine();
                             
-                            
-                            System.out.print("Masukkan Judul buku baru: ");
+                            System.out.print("Masukkan Judul: ");
                             String judulBaru = scanner.nextLine();
                             
-                            System.out.print("Masukkan Pengarang buku: ");
+                            System.out.print("Masukkan Pengarang: ");
                             String pengarangBaru = scanner.nextLine();
                             
                             System.out.print("Masukkan Tahun Terbit: ");
@@ -80,35 +74,40 @@ public class SmartLibrary {
                             scanner.nextLine();
                             
                             if (jenis == 1) {
-                                System.out.println("Masukkan Jumlah Halaman: ");
+                                System.out.print("Masukkan Jumlah Halaman: ");
                                 int halaman = scanner.nextInt();
-                                scanner.nextInt
+                                scanner.nextLine();
+                                daftarKoleksi[jumlahKoleksi] = new BukuCetak(judulBaru, pengarangBaru, tahunBaru, halaman);
+                            } else if (jenis == 2) {
+                                System.out.print("Masukkan Ukuran File (MB): ");
+                                int ukuran = scanner.nextInt();
+                                scanner.nextLine();
+                                daftarKoleksi[jumlahKoleksi] = new EBook(judulBaru, pengarangBaru, tahunBaru, ukuran);
                             }
-                      
-                            
-//                            Koleksi bukuBaru = new Koleksi(judulBaru, pengarangBaru, tahunBaru);
-//                            daftarKoleksi[jumlahKoleksi] = bukuBaru;
                             
                             jumlahKoleksi++;
                             System.out.println("Sukses! Koleksi berhasil ditambahkan.");
                         } else {
-                            System.out.println("Maaf, kapasitas rak buku sudah penuh!");
+                            System.out.println("Maaf, kapasitas perpustakaan penuh!");
                         }
+                        scanner.nextLine();
                     }
                     case 2 -> {
                         System.out.println("\n--- Daftar Koleksi di Perpustakaan ---");
                         if (jumlahKoleksi == 0) {
-                            System.out.println("Belum ada buku yang tersimpan");
+                            System.out.println("Belum ada koleksi yang tersimpan");
                         } else {
                             for (int i = 0; i < jumlahKoleksi; i++) {
                                 System.out.print((i + 1) + ". ");
-                                daftarKoleksi[i].tampilkanInfoBuku();
+                                daftarKoleksi[i].tampilkanInfo();
+                                daftarKoleksi[i].caraPinjam();
+                                System.out.println();
                             }
-
-                            System.out.println("\n* Total Koleksi Fisik yang Terdaftar: " + Koleksi.totalBukuBerhasilDibuat);
+                            
+                            System.out.println("* Total Item Perpustakaan: " + Koleksi.totalKoleksiBerhasilDibuat);
                         }
                         System.out.print("Tekan Enter untuk melanjutkan...");
-                        scanner.nextLine(); 
+                        scanner.nextLine();
                     }
                     case 3 -> {
                         System.out.println("\n-- Fitur Cari Koleksi --");
@@ -118,21 +117,22 @@ public class SmartLibrary {
                         int modeCari = scanner.nextInt();
                         scanner.nextLine();
                         
-                        if (modeCari == 1) {
+                    switch (modeCari) {
+                        case 1 -> {
                             System.out.print("Masukkan Judul: ");
                             String kataKunci = scanner.nextLine();
                             cariKoleksi(kataKunci, daftarKoleksi, jumlahKoleksi);
-                        } else if (modeCari == 2) {
+                        }
+                        case 2 -> {
                             System.out.print("Masukkan Tahun: ");
                             int angkaKunci = scanner.nextInt();
                             scanner.nextLine();
                             cariKoleksi(angkaKunci, daftarKoleksi, jumlahKoleksi);
-                        } else {
-                            System.out.println("Pilihan tidak valid.");
                         }
-                        
-                        System.out.print("Tekan Enter untuk melanjutkan...");
-                        scanner.nextLine();
+                        default -> System.out.println("Pilihan tidak valid.");
+                    }
+                    System.out.print("Tekan Enter untuk melanjutkan...");
+                    scanner.nextLine();
                     }
                     case 4 -> {
                         System.out.println("Terima kasih telah menggunakan Smart Library!");
@@ -147,4 +147,3 @@ public class SmartLibrary {
         }
     }
 }
-
